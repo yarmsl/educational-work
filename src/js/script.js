@@ -1,4 +1,5 @@
 'use strict';
+
 document.addEventListener('DOMContentLoaded', () => {
    
 //Tabs
@@ -88,6 +89,23 @@ document.addEventListener('DOMContentLoaded', () => {
             }
    }
    setClock('.timer', deadline);
+
+// Modal
+
+const modalTrigger = document.querySelectorAll('[data-modal]'),
+      modalClose = document.querySelector('[data-close]'),
+      modal = document.querySelector('.modal');
+  
+      modalTrigger.forEach(btn => {
+         btn.addEventListener('click', () => {
+            modal.style.display = 'block';
+         });
+      });
+      modalClose.addEventListener('click', () => {
+         modal.style.display = 'none';
+      });
+
+
 
 
 });
