@@ -101,7 +101,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
          modal.classList.remove('hide');
          modal.classList.add('show');
          document.body.style.overflow = 'hidden';
-         clearInterval(modalTimerId);
+         // clearInterval(modalTimerId);
       }
 
       modalTrigger.forEach(btn => {
@@ -128,7 +128,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
          }
       });
 
-      const modalTimerId = setTimeout(openModal, 7000);
+      // const modalTimerId = setTimeout(openModal, 7000);
 
       function showModalByScroll() {
          if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
@@ -139,5 +139,64 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
 
       window.addEventListener('scroll', showModalByScroll);
 
-      
+      // Класс
+
+      class MenuCard {
+         constructor(src, alt, title, descr, price, parentSelector) {
+            this.src = src;
+            this.alt = alt;
+            this.title = title;
+            this.descr = descr;
+            this.price = price;
+            this.parent = document.querySelector(parentSelector);
+            this.changeToRub();
+         }
+         changeToRub() {
+            this.price = this.price.toLocaleString('ru', { maximumFractionDigits: 0, style: 'currency', currency: 'RUB' });
+         }
+
+         renderCard() {
+               const element = document.createElement('div');
+               element.innerHTML = `
+            <div class="menu__item">
+               <img src="img/tabs/${this.src}" alt="post">
+               <h3 class="menu__item-subtitle">${this.title}</h3>
+               <div class="menu__item-descr">${this.descr}</div>
+               <div class="menu__item-divider"></div>
+               <div class="menu__item-price">
+                   <div class="menu__item-cost">Цена:</div>
+                   <div class="menu__item-total"><span>${this.price}</span></div>
+               </div>
+            </div>
+               `;
+               this.parent.append(element);
+         }
+      }
+
+      new MenuCard(
+         'hamburger.webp',
+         'бургер',
+         'Меню жирный',
+         'Мясистый нежный гамбургер с картошечкой для жены',
+         380,
+         '.menu .container'
+      ).renderCard();
+
+      new MenuCard(
+         'hamburger.webp',
+         'бургер',
+         'Меню жирный',
+         'Мясистый нежный гамбургер с картошечкой для жены',
+         380,
+         '.menu .container'
+      ).renderCard();
+
+      new MenuCard(
+         'hamburger.webp',
+         'бургер',
+         'Меню жирный',
+         'Мясистый нежный гамбургер с картошечкой для жены',
+         380,
+         '.menu .container'
+      ).renderCard();
 });
