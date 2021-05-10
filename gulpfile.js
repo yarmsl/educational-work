@@ -6,6 +6,7 @@ let fs = require('fs');
 let path = {
     build: {
         html: project_folder + "/",
+        php: project_folder + "/",
         css: project_folder + "/css/",
         js: project_folder + "/js/",
         img: project_folder + "/img/",
@@ -13,7 +14,7 @@ let path = {
     },
     src: {
         html: source_folder + "/*.html",
-        manifest: project_folder + "/",
+        php: source_folder + "/*.php",
         css: source_folder + "/scss/style.scss",
         js: source_folder + "/js/script.js",
         img: source_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}",
@@ -21,6 +22,7 @@ let path = {
     },
     watch: {
         html: source_folder + "/**/*.html",
+        php: source_folder + "/*.php",
         css: source_folder + "/scss/**/*.scss",
         js: source_folder + "/js/**/*.js",
         img: source_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}"
@@ -54,14 +56,19 @@ function browserSync(params) {
         },
         port: 3000,
         notify: false
-    })
-};
+    });
+}
 
 function html() {
     return src(path.src.html)
         .pipe(fileinclude())
         .pipe(dest(path.build.html))
-        .pipe(browsersync.stream())
+        .pipe(browsersync.stream());
+}
+
+function php() {
+    return src(path.src.php)
+        .pipe(dest(path.build.php));
 }
 
 function css() {
@@ -187,6 +194,7 @@ function cb() {
 
 function watchFiles(params) {
     gulp.watch([path.watch.html], html);
+    gulp.watch([path.watch.php], php);
     gulp.watch([path.watch.css], css);
     gulp.watch([path.watch.js], js);
     gulp.watch([path.watch.img], images);
@@ -194,7 +202,7 @@ function watchFiles(params) {
 
 
 
-let build = gulp.series( gulp.parallel(js, css, html, images, fonts), fontsStyle);
+let build = gulp.series( gulp.parallel(js, css, html, php, images, fonts), fontsStyle);
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 exports.fontsStyle = fontsStyle;
@@ -203,6 +211,7 @@ exports.images = images;
 exports.js = js;
 exports.css = css;
 exports.html = html;
+exports.php = php;
 exports.build = build;
 exports.watch = watch;
 exports.default = watch;
