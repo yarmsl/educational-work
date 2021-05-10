@@ -166,7 +166,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
                }
  
                element.innerHTML = `
-               <img src="img/tabs/${this.src}" alt="post">
+               <img src="${this.src}" alt=${this.alt}>
                <h3 class="menu__item-subtitle">${this.title}</h3>
                <div class="menu__item-descr">${this.descr}</div>
                <div class="menu__item-divider"></div>
@@ -179,35 +179,52 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
          }
       }
 
-      new MenuCard(
-         'hamburger.webp',
-         'бургер',
-         'Меню жирный',
-         'Мясистый нежный гамбургер с картошечкой для жены',
-         380,
-         '.menu .container',
- 
-      ).renderCard();
+      const getResources = async url => {
+         const result = await fetch(url);
+         if (!result.ok) {
+            throw new Error(`Couldt fetch ${url}, status: ${result.status}`);
+         }
+         return await result.json();
+      };
 
-      new MenuCard(
-         'hamburger.webp',
-         'бургер',
-         'Меню жирный',
-         'Мясистый нежный гамбургер с картошечкой для жены',
-         380,
-         '.menu .container',
-         'menu__item'
-      ).renderCard();
+      // getResources('http://localhost:3000/menu')
+      //    .then(data => {
+            // data.forEach(({img, altimg, title, descr, price}) => {
+            //    new MenuCard(img, altimg, title, descr, price, '.menu .container').renderCard();
+            // });
+      //    });
 
-      new MenuCard(
-         'hamburger.webp',
-         'бургер',
-         'Меню жирный',
-         'Мясистый нежный гамбургер с картошечкой для жены',
-         380,
-         '.menu .container',
-         'menu__item'
-      ).renderCard();
+
+      axios.get('http://localhost:3000/menu')
+         .then(data => { 
+            data.data.forEach(({img, altimg, title, descr, price}) => {
+            new MenuCard(img, altimg, title, descr, price, '.menu .container').renderCard();
+            });
+         });
+
+
+      // getResources('http://localhost:3000/menu')
+      //    .then(data => createCard(data));
+
+      //    function createCard(data) {
+      //       data.forEach(({img, altimg, title, descr, price}) => {
+      //          price = price.toLocaleString('ru', { maximumFractionDigits: 0, style: 'currency', currency: 'RUB' });
+      //          const element = document.createElement('div');
+      //          element.classList.add('menu__item');
+      //          element.innerHTML = `
+      //          <img src="${img}" alt=${altimg}>
+      //          <h3 class="menu__item-subtitle">${title}</h3>
+      //          <div class="menu__item-descr">${descr}</div>
+      //          <div class="menu__item-divider"></div>
+      //          <div class="menu__item-price">
+      //              <div class="menu__item-cost">Цена:</div>
+      //              <div class="menu__item-total"><span>${price}</span></div>
+      //          </div>
+      //          `;
+      //          document.querySelector('.menu .container').append(element);
+      //       });
+      //    }
+
 
       //forms 
 
@@ -222,10 +239,21 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
 
 
       forms.forEach(item => {
-         postData(item);
+         bindPostData(item);
       });
 
-      function postData(form) {
+      const postData = async (url, data) => {
+         const result = await fetch(url, {
+            method: 'POST',
+            headers: {
+               'Content-type': 'application/json'
+            },
+            body: data
+         });
+         return await result.json();
+      };
+
+      function bindPostData(form) {
          form.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -242,22 +270,9 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
 
             const formData = new FormData(form);
 
-            const data = {};
-            formData.forEach( (value,key) => {
-               data[key] = value;
-            });
+            const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
-            const json = JSON.stringify(data);
-
-
-            fetch('./server.php', {
-               method: 'POST',
-               headers: {
-                  'Content-type': 'application/json'
-               },
-               body: json
-            })
-            .then(data => data.text())
+            postData('http://localhost:3000/requests', json)
             .then(data => {
                console.log(data);
                showThanksModal(message.success);
@@ -268,10 +283,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             })
             .finally(() => {
                form.reset();
-            })
-
-
-            
+            });  
          });
       }
 
@@ -297,6 +309,5 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             closeModal();
          }, 4000);
       }
-
 
 });

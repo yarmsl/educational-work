@@ -1,7 +1,7 @@
 {
-  "name": "at74-2",
+  "name": "Food",
   "version": "2.0.0",
-  "description": "сборка галп ат",
+  "description": "educational_work",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -32,6 +32,7 @@
     "gulp-webp-css": "^1.1.0",
     "gulp-webp-html": "^1.0.2",
     "gulp-webpcss": "^1.1.1",
+    "json-server": "^0.16.3",
     "rename": "^1.0.4"
   },
   "dependencies": {

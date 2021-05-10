@@ -7,6 +7,7 @@ let path = {
     build: {
         html: project_folder + "/",
         php: project_folder + "/",
+        json: project_folder + "/json/",
         css: project_folder + "/css/",
         js: project_folder + "/js/",
         img: project_folder + "/img/",
@@ -15,6 +16,7 @@ let path = {
     src: {
         html: source_folder + "/*.html",
         php: source_folder + "/*.php",
+        json: source_folder + "/json/*.json",
         css: source_folder + "/scss/style.scss",
         js: source_folder + "/js/script.js",
         img: source_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}",
@@ -23,6 +25,7 @@ let path = {
     watch: {
         html: source_folder + "/**/*.html",
         php: source_folder + "/*.php",
+        json: source_folder + "/json/*.json",
         css: source_folder + "/scss/**/*.scss",
         js: source_folder + "/js/**/*.js",
         img: source_folder + "/img/**/*.{jpg,png,svg,gif,ico,webp}"
@@ -54,6 +57,7 @@ function browserSync(params) {
         server: {
             baseDir: "./" + project_folder + "/"
         },
+        // proxy: "http://localhost/",
         port: 4000,
         notify: false
     });
@@ -69,6 +73,13 @@ function html() {
 function php() {
     return src(path.src.php)
         .pipe(dest(path.build.php));
+        
+}
+
+function json() {
+    return src(path.src.json)
+        .pipe(dest(path.build.json));
+        
 }
 
 function css() {
@@ -195,14 +206,24 @@ function cb() {
 function watchFiles(params) {
     gulp.watch([path.watch.html], html);
     gulp.watch([path.watch.php], php);
+    gulp.watch([path.watch.json], json);
     gulp.watch([path.watch.css], css);
     gulp.watch([path.watch.js], js);
     gulp.watch([path.watch.img], images);
 }
 
+// function watchFiles(params) {
+//     gulp.watch([path.watch.html], html).on('change', browsersync.reload);
+//     gulp.watch([path.watch.php], php).on('change', browsersync.reload);
+//     gulp.watch([path.watch.json], json).on('change', browsersync.reload);
+//     gulp.watch([path.watch.css], css).on('change', browsersync.reload);
+//     gulp.watch([path.watch.js], js).on('change', browsersync.reload);
+//     gulp.watch([path.watch.img], images).on('change', browsersync.reload);
+// }
 
 
-let build = gulp.series( gulp.parallel(js, css, html, php, images, fonts), fontsStyle);
+
+let build = gulp.series( gulp.parallel(js, css, html, php, json, images, fonts), fontsStyle);
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 exports.fontsStyle = fontsStyle;
@@ -212,6 +233,7 @@ exports.js = js;
 exports.css = css;
 exports.html = html;
 exports.php = php;
+exports.json = json;
 exports.build = build;
 exports.watch = watch;
 exports.default = watch;
