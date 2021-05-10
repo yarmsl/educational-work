@@ -240,10 +240,6 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-type', 'application/json');
-
             const formData = new FormData(form);
 
             const data = {};
@@ -254,20 +250,27 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             const json = JSON.stringify(data);
 
 
-            request.send(json);
+            fetch('./server.php', {
+               method: 'POST',
+               headers: {
+                  'Content-type': 'application/json'
+               },
+               body: json
+            })
+            .then(data => data.text())
+            .then(data => {
+               console.log(data);
+               showThanksModal(message.success);
+               statusMessage.remove();
+            })
+            .catch(() => {
+               showThanksModal(message.failure);
+            })
+            .finally(() => {
+               form.reset();
+            })
 
-            request.addEventListener('load', () => {
-               if (request.status === 200) {
-                  console.log(request.response);
-                  showThanksModal(message.success);
-                  form.reset();
-               
-                     statusMessage.remove();
-                  
-               } else {
-                  showThanksModal(message.failure);
-               }
-            });
+
             
          });
       }
@@ -294,5 +297,6 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             closeModal();
          }, 4000);
       }
+
 
 });
