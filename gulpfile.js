@@ -106,7 +106,7 @@ function css() {
             })
         )
         .pipe(dest(path.build.css))
-        .pipe(browsersync.stream())
+        .pipe(browsersync.stream());
 }
 
 function js() {
