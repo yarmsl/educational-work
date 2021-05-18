@@ -367,14 +367,34 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
          total.textContent = addZero(slides.length);
          current.textContent = addZero(slideIndex);
          slidesField.style.width = 100 * slides.length + '%';
-         slidesField.style.display = 'flex';
-         slidesField.style.transition = '0.5s all';
-
-         slidesWrapper.style.overflow = 'hidden';
+   
 
          slides.forEach(slide => {
             slide.style.width = width;
          });
+         
+         const indicators = document.createElement('ol'),
+              dots = [];
+            indicators.classList.add('carousel-indicators');
+            slider.append(indicators);
+
+            for (let i = 0; i < slides.length; i++) {
+               const dot = document.createElement('li');
+               dot.setAttribute('data-slide-to', i + 1);
+               dot.classList.add('dot');
+               if (i == 0) {
+                  dot.classList.add('vis');
+               }
+               indicators.append(dot);
+               dots.push(dot);
+            }
+
+            const flameDot = (els, i) => {
+               els.forEach(el => el.classList.add('glass'));
+               els.forEach(el => el.classList.remove('vis'));
+               els[i - 1].classList.add('vis');
+               els[i - 1].classList.remove('glass');
+            };
 
          next.addEventListener('click', () => {
             if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
@@ -392,6 +412,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             }
             current.textContent = addZero(slideIndex);
 
+            flameDot(dots, slideIndex);
          });
 
          prev.addEventListener('click', () => {
@@ -409,9 +430,21 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
                slideIndex--;
             }
             current.textContent = addZero(slideIndex);
+
+            flameDot(dots, slideIndex);
          });
 
+         dots.forEach(dot => {
+            dot.addEventListener('click', e => {
+               const slideTo = e.target.getAttribute('data-slide-to');
+               slideIndex = slideTo;
+               offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+               slidesField.style.transform = `translateX(-${offset}px)`;
 
+               current.textContent = addZero(slideIndex);
+               flameDot(dots, slideIndex);
+            });
+         });
       }
       sliderCarousel();
       // sliderSimple();
