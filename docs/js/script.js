@@ -1,5 +1,4 @@
 'use strict';
-
 document.addEventListener('DOMContentLoaded', () => {
    
    function addZero(num) {
@@ -396,11 +395,18 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
                els[i - 1].classList.remove('glass');
             };
 
+           
+
+            function val2num() {
+               return +this.replace(/\D/g, '');
+            }
+            String.prototype.val2num = val2num;
+
          next.addEventListener('click', () => {
-            if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+            if (offset == width.val2num() * (slides.length - 1)) {
                offset = 0;
             } else {
-               offset += +width.slice(0, width.length - 2);
+               offset += width.val2num();
             }
 
             slidesField.style.transform = `translateX(-${offset}px)`;
@@ -417,9 +423,9 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
 
          prev.addEventListener('click', () => {
             if (offset == 0) {
-               offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+               offset = width.val2num() * (slides.length - 1);
             } else {
-               offset -= +width.slice(0, width.length - 2);
+               offset -= width.val2num();
             }
 
             slidesField.style.transform = `translateX(-${offset}px)`;
@@ -438,7 +444,7 @@ const modalTrigger = document.querySelectorAll('[data-modal]'),
             dot.addEventListener('click', e => {
                const slideTo = e.target.getAttribute('data-slide-to');
                slideIndex = slideTo;
-               offset = +width.slice(0, width.length - 2) * (slideTo - 1);
+               offset = width.val2num() * (slideTo - 1);
                slidesField.style.transform = `translateX(-${offset}px)`;
 
                current.textContent = addZero(slideIndex);
