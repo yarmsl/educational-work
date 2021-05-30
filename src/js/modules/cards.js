@@ -1,4 +1,5 @@
 import {getResources} from '../services/services';
+import axios from 'axios';
 
 function cards() {
    class MenuCard {
