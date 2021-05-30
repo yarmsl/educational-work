@@ -1,15 +1,7 @@
-function timer() {
+import {addZero} from '../services/services';
 
-   function addZero(num) {
-      if (num >= 0 && num < 10) {
-         return `0${num}`;
-      } else {
-         return num;
-      }
-   }
-
-   const deadline = '2021-05-01';
-
+function timer(id, deadline) {
+   
    function getTimeRemaining(endtime) {
       const t = new Date(endtime) - Date.now(),
             days = Math.floor(t / (1000 * 60 * 60 * 24)),
@@ -48,7 +40,7 @@ function timer() {
                }
             }
    }
-   setClock('.timer', deadline);
+   setClock(id, deadline);
 }
 
-module.exports = timer;
+export default timer;

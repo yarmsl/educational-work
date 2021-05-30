@@ -1,3 +1,5 @@
+import {getResources} from '../services/services';
+
 function cards() {
    class MenuCard {
       constructor(src, alt, title, descr, price, parentSelector, ...classes) {
@@ -39,21 +41,12 @@ function cards() {
       }
    }
 
-   const getResources = async url => {
-      const result = await fetch(url);
-      if (!result.ok) {
-         throw new Error(`Couldt fetch ${url}, status: ${result.status}`);
-      }
-      return await result.json();
-   };
-
    // getResources('http://localhost:3000/menu')
    //    .then(data => {
          // data.forEach(({img, altimg, title, descr, price}) => {
          //    new MenuCard(img, altimg, title, descr, price, '.menu .container').renderCard();
          // });
    //    });
-
 
    axios.get('http://localhost:3000/menu')
       .then(data => { 
@@ -87,4 +80,4 @@ function cards() {
 
 }
 
-module.exports = cards;
+export default cards;

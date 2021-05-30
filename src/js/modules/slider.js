@@ -1,21 +1,14 @@
-function slider() {
+import {addZero} from '../services/services';
 
-   function addZero(num) {
-      if (num >= 0 && num < 10) {
-         return `0${num}`;
-      } else {
-         return num;
-      }
-   }
-
-   const slider = document.querySelector('.offer__slider'),
-         prev = slider.querySelector('.offer__slider-prev'),
-         next = slider.querySelector('.offer__slider-next'),
-         current = slider.querySelector('#current'),
-         total = slider.querySelector('#total'),
-         slides = slider.querySelectorAll('.offer__slide'),
-         slidesWrapper = slider.querySelector('.offer__slider-wrapper'),
-         slidesField = slider.querySelector('.offer__slider-inner'),
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
+   const slider = document.querySelector(container),
+         prev = slider.querySelector(prevArrow),
+         next = slider.querySelector(nextArrow),
+         current = slider.querySelector(currentCounter),
+         total = slider.querySelector(totalCounter),
+         slides = slider.querySelectorAll(slide),
+         slidesWrapper = slider.querySelector(wrapper),
+         slidesField = slider.querySelector(field),
          width = window.getComputedStyle(slidesWrapper).width;
    let slideIndex = 1,
       offset = 0;
@@ -27,7 +20,6 @@ function slider() {
 
    slides.forEach(slide => {
       slide.style.width = width;
-      console.log(width);
    });
    
    const indicators = document.createElement('ol'),
@@ -113,4 +105,4 @@ function slider() {
    });
 }
 
-module.exports = slider;
+export default slider;
