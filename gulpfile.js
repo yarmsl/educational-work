@@ -34,6 +34,9 @@ let path = {
 
 let { src, dest } = require('gulp'),
     gulp = require('gulp'),
+    webpack = require('webpack'),
+    webpackStream = require('webpack-stream'),
+    webpackConfig = require('./webpack.config.js'),
     browsersync = require("browser-sync").create(),
     babel = require('gulp-babel'),
     fileinclude = require("gulp-file-include"),
@@ -111,16 +114,15 @@ function css() {
 
 function js() {
     return src(path.src.js)
-        .pipe(fileinclude())
-        .pipe(dest(path.build.js))
-        .pipe(babel({
-            presets: ['@babel/env']
-        }))
-        .pipe(
-            rename({
-                extname: ".min.js"
-            })
-        )
+        // .pipe(babel({
+        //     presets: ['@babel/env']
+        // }))
+        .pipe(webpackStream(webpackConfig), webpack)
+        // .pipe(
+        //     rename({
+        //         extname: ".min.js"
+        //     })
+        // )
         .pipe(dest(path.build.js))
         .pipe(browsersync.stream());
 }
